@@ -48,10 +48,10 @@ yarn build
 Интерфейс товара
 ```
 interface IProduct {
-    id: string;
+	id: string;
 	title: string;
-    category: string;
-    image?: string;
+	category: string;
+	image?: string;
 	description?: string;
 	price: number | null;
 }
@@ -60,34 +60,34 @@ interface IProduct {
 Интерфейс для частей приложения: каталог, корзина, превью, форма заказа
 ```
 interface IAppState {
-    catalog:IProduct[];
-    cart: string[];
-    previw: string | null;
-    order: IOrder;
+	catalog:IProduct[];
+	cart: string[];
+	previw: string | null;
+	order: IOrder;
 }
 ```
 
 Интерфейс данных покупателя для оформления заказа
 ```
 interface IOrderForm {
-    payment: string;
-    address: string;
-    email: string;
-    phone: string;
-    total: string | number;
+    	payment: string;
+    	address: string;
+    	email: string;
+    	phone: string;
+    	total: string | number;
 }
 ```
 Интерфейс данных самого заказа (Товары и данные покупателя)
 ```
 interface IOrder extends IOrderForm {
-    items: string[];
+    	items: string[];
 }
 ```
 Интерфейс данных приходящих с сервера
 ```
 interface IOrderResult {
-    id: string;
-    total: number;
+    	id: string;
+    	total: number;
 }
 ```
 
