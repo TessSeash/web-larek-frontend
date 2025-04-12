@@ -103,6 +103,11 @@ type FormErrors = Partial<Record<keyof IOrder, string>>;
 
 ### Базовый код
 #### Класс API
+Класс для работы с API.
+В конструктор передается url (baseUrl) и опции запроса (options)
+Методы:
+- `get` - выполняет GET-запрос по переданному URI, добавляя его к базовому URL.
+- `post` - выполняет запрос с телом (body) и методом POST, PUT, PATCH или другим, отправляя данные на сервер.
 #### Класс Model
 #### Класс Component
 #### Класс EventEmitter
