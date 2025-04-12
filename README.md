@@ -83,12 +83,16 @@ interface IOrder extends IOrderForm {
     	items: string[];
 }
 ```
-Интерфейс данных приходящих с сервера
+Интерфейс данных, приходящих с сервера
 ```
 interface IOrderResult {
     	id: string;
     	total: number;
 }
+```
+Типы ошибки заказа
+```
+type FormErrors = Partial<Record<keyof IOrder, string>>;
 ```
 
 
