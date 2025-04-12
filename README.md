@@ -46,14 +46,16 @@ yarn build
 
 ## Описание данных
 Интерфейс товара
-`interface IProduct {
+```
+interface IProduct {
     id: string;
 	title: string;
     category: string;
     image?: string;
 	description?: string;
 	price: number | null;
-}`
+}
+```
 
 Интерфейс для частей приложения: каталог, корзина, превью, форма заказа
 `interface IAppState {
