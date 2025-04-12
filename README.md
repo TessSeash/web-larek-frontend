@@ -43,3 +43,25 @@ yarn build
 ## Описание проекта
 Небольшое фронтенд-приложение с архитектурой Model-View-Presenter (MVP). 
 Пользователи могут просматривать каталог товаров, изучать подробности, добавлять в корзину товары и оформлять заказ.
+
+## Описание данных
+Интерфейс товара
+`interface IProduct {
+    id: string;
+	title: string;
+    category: string;
+    image?: string;
+	description?: string;
+	price: number | null;
+}`
+
+Интерфейс для частей приложения: каталог, корзина, превью, форма заказа
+`interface IAppState {
+    catalog:IProduct[];
+    cart: string[];
+    previw: string | null;
+    order: IOrder;
+}`
+
+
+
