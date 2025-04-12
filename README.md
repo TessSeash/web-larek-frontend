@@ -58,12 +58,37 @@ interface IProduct {
 ```
 
 Интерфейс для частей приложения: каталог, корзина, превью, форма заказа
-`interface IAppState {
+```
+interface IAppState {
     catalog:IProduct[];
     cart: string[];
     previw: string | null;
     order: IOrder;
-}`
+}
+```
 
+Интерфейс данных покупателя для оформления заказа
+```
+interface IOrderForm {
+    payment: string;
+    address: string;
+    email: string;
+    phone: string;
+    total: string | number;
+}
+```
+Интерфейс данных самого заказа (Товары и данные покупателя)
+```
+interface IOrder extends IOrderForm {
+    items: string[];
+}
+```
+Интерфейс данных приходящих с сервера
+```
+interface IOrderResult {
+    id: string;
+    total: number;
+}
+```
 
 
