@@ -121,6 +121,4 @@ type FormErrors = Partial<Record<keyof IOrder, string>>;
 - `onAll` - Подписывает функцию callback на все события сразу.
 - `ofAll` - Полностью сбрасывает все подписки на все события.
 - `trigger` - Возвращает функцию, которая при вызове вызовет событие eventName, объединив переданные данные с `context`
-#### Класс Model
-#### Класс Component
 
