@@ -101,8 +101,8 @@ type FormErrors = Partial<Record<keyof IOrder, string>>;
 - слой данных, отвечает за хранение и изменение данных
 - презентер, отвечает за связь представления и данных
 
-## Базовый код
-### Класс API
-### Класс Model
-### Класс Component
-### Класс EventEmitter
+### Базовый код
+#### Класс API
+#### Класс Model
+#### Класс Component
+#### Класс EventEmitter
