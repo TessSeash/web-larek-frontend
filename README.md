@@ -325,11 +325,15 @@ type FormErrors = Partial<Record<keyof IOrder, string>>;
 ##### Методы:
 
 - `set id(value: string)` - установить идентификатор товара
+- `get id():string` - удалить идентификатор товара
 - `set title(value: string)` - установить название
+- `get title(): string` - возращает название
 - `set category(value: string)` - установить категорию(тип)
 - `set image(value: string)` -  установить изображение
 - `set description(value: string)` - установить описание
 - `set price(value: string)` - установить цену
+- `get price(): string` - возвращает цену
+
 
 #### Класс OrderForm
 
