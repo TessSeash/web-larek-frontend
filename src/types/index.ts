@@ -8,10 +8,10 @@ export interface IProduct {
 }
 
 export interface IAppState {
-    catalog:IProduct[];
-    cart: string[];
-    previw: string | null;
-    order: IOrder;
+    catalog:IProduct[]; // Храним товары в ассортименте на странице
+    cart: string[]; // Храним ID товаров, добавленных в корзину
+    preview: string | null; // ID товара который, просматривают
+    order: IOrder; // Текущий заказ
 }
 
 export interface IOrderForm {
@@ -19,11 +19,11 @@ export interface IOrderForm {
     address: string;
     email: string;
     phone: string;
-    total: string | number;
 }
 
 export interface IOrder extends IOrderForm {
     items: string[];
+    total: number;
 }
 
 export interface IOrderResult {
@@ -33,7 +33,7 @@ export interface IOrderResult {
 
 export type FormErrors = Partial<Record<keyof IOrder, string>>;
 
-export type TPayment = 'card' | 'cash' | undefined;
+export type TPayment = 'card' | 'cash';
 
 export type AppEvents =
   | 'modal:open'
