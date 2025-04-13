@@ -29,7 +29,7 @@ export interface IOrder extends IOrderForm {
 
 export interface ICart {
 	products: IProduct[]; // Массив товаров в корзине
-	totalPrice: string; // Итоговая цена
+	totalPrice: number; // Итоговая цена
  }
 
 export type FormErrors = Partial<Record<keyof IOrder, string>>; // ошибки валидации формы оформления заказа

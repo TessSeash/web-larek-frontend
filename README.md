@@ -70,7 +70,7 @@ interface IAppState {
 ```
  interface ICart {
 	products: IProduct[];
-	totalPrice: string | number;
+	totalPrice: number;
  }
 ```
 Интерфейс данных покупателя для оформления заказа
