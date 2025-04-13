@@ -34,3 +34,14 @@ export interface IOrderResult {
 export type FormErrors = Partial<Record<keyof IOrder, string>>;
 
 export type TPayment = 'card' | 'cash' | undefined;
+
+export type AppEvents =
+  | 'modal:open'
+  | 'modal:close'
+  | 'product:select'
+  | 'product:add'
+  | 'product:remove'
+  | 'cart:submit'
+  | 'orderFormData:valid'
+  | 'orderFormData:submit'
+  | 'orderFormData:orderCompleted';

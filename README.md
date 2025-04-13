@@ -107,6 +107,20 @@ type FormErrors = Partial<Record<keyof IOrder, string>>;
  type TPayment = 'card' | 'cash' | undefined;
  ```
 
+ Типы взаимодействий компонентов (события)
+ ```
+ export type AppEvents =
+  | 'modal:open'
+  | 'modal:close'
+  | 'product:select'
+  | 'product:add'
+  | 'product:remove'
+  | 'cart:submit'
+  | 'orderFormData:valid'
+  | 'orderFormData:submit'
+  | 'orderFormData:orderCompleted';
+ ```
+
 ## Архитектура приложения
 
 Код приложения разделён на слои согласно паттерну Model-View-Presenter (MVP)
