@@ -86,16 +86,12 @@ interface IOrderForm {
 Интерфейс данных самого заказа (Товары и данные покупателя)
 ```
 interface IOrder extends IOrderForm {
-    	items: string[];
+    items: string[];
+    total: number;
+    id: string;
 }
 ```
-Интерфейс данных, приходящих с сервера
-```
-interface IOrderResult {
-    	id: string;
-    	total: number;
-}
-```
+
 Типы ошибки валидации данных формы
 ```
 type FormErrors = Partial<Record<keyof IOrder, string>>;
