@@ -27,6 +27,11 @@ export interface IOrder extends IOrderForm {
     id: string; // уникальный идентификатор заказа
 }
 
+export interface ICart {
+	products: IProduct[]; // Массив товаров в корзине
+	totalPrice: string | number; // Итоговая цена
+ }
+
 export type FormErrors = Partial<Record<keyof IOrder, string>>; // ошибки валидации формы оформления заказа
 
 export type TPayment = 'card' | 'cash'; // способ оплаты
