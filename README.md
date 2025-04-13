@@ -233,7 +233,7 @@ type FormErrors = Partial<Record<keyof IOrder, string>>;
 
 ##### Методы:
 
-- `setCatalog(items: ICard[])` - список товаров в каталоге(в наличии на главной странцие)
+- `setCatalog(items: ICart[])` - список товаров в каталоге(в наличии на главной странцие)
 
 - `addProductToCart(id: string): void` - добавить товар в корзину
 - `removeProductFromCart(id: string): void` - убрать товар из корзины
