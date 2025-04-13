@@ -62,11 +62,11 @@ interface IProduct {
 interface IAppState {
 	catalog:IProduct[];
 	cart: string[];
-	previw: string | null;
+	preview: string | null;
 	order: IOrder;
 }
 ```
-Интрефейс корзины товаров
+Интерфейс корзины товаров
 ```
  interface ICart {
 	products: IProduct[];
@@ -76,7 +76,7 @@ interface IAppState {
 Интерфейс данных покупателя для оформления заказа
 ```
 interface IOrderForm {
-    	payment: string;
+    	payment: TPayment;
     	address: string;
     	email: string;
     	phone: string;
@@ -163,9 +163,9 @@ type FormErrors = Partial<Record<keyof IOrder, string>>;
 
 ##### Методы:
 
-- `setProduct` - добавить продукт
-- `deleteProduct` - удалить продукт
-- `getProducts` - получить все товары
+- `setProduct(product: IProduct[]): void` - добавить продукт
+- `deleteProduct(product: IProduct[]): void` - удалить продукт
+- `getProducts(id: string): IProduct | undefined;` - получить все товары
 
 #### Класс CartData
 
@@ -173,20 +173,20 @@ type FormErrors = Partial<Record<keyof IOrder, string>>;
 
 ##### Поля класса:
 
-- `cart: Icart[]` - Выбранные товары в корзине покупателя (Массив объектов)
+- `cart: ICart` - Выбранные товары в корзине покупателя (Массив объектов)
 
 ##### Методы:
 
-- `addProductToCart` - добавить товар в корзину
-- `removeProductFromCart` - убрать товар из корзины
-- `clearCart` - очистить корзину от всех товаров
-- `getProducts` - вернуть массив товаров в корзине
+- `addProductToCart(id: string): void` - добавить товар в корзину
+- `removeProductFromCart(id: string): void` - убрать товар из корзины
+- `clearCart(): void` - очистить корзину от всех товаров
+- `getProducts(): IProduct` - вернуть массив товаров в корзине
 
 ### Слой представления
 
 #### Класс Modal
 
-Класс модального окна. Может отображать товар, корзину или оформлеение покупки
+Класс модального окна. Отвечает за отображение всплывающих окон: предпросмотр товара, корзина или форма оформления заказа.
 
 - `constructor(selector: string, events: IEvents)` - конструктор находит модальное окно и настраивает систему событий.
 
@@ -203,18 +203,18 @@ type FormErrors = Partial<Record<keyof IOrder, string>>;
 
 #### Класс Page
 
-Класс следит за состоянием страницы. Работает с основной обёрткой страницы, кнопкой открытия корзины, счётсчиком товаров.
+Класс следит за состоянием страницы. Работает с основной обёрткой страницы, кнопкой открытия корзины, счётчиком товаров.
 Класс взаимодействует с корзиной, передавая события через систему событийного брокера.
 
 ##### Поля класса:
 
 - `wrapper: HTMLElement` - состояние обертки страницы.
 - `button: HTMLButtonElement` - кнопка для открытия корзины.
-- `counter: HTMLSpanElement` - счётчик колличества товаров в корзине.
+- `counter: HTMLSpanElement` - счётчик количества товаров в корзине.
 
 ##### Методы:
 - `set isLocked(value:boolean)` - блокировать или разблокировать страницу.
-- `set counter(value:number)` - изменить счётсчик колличества товаров в корзине.
+- `set counter(value:number)` - изменить счётчик количества товаров в корзине.
 
 
 #### Класс Product
@@ -236,7 +236,7 @@ type FormErrors = Partial<Record<keyof IOrder, string>>;
 - `set title(value: string)` - установить название
 - `set category(value: string)` - установить категорию(тип)
 - `set image(value: string)` -  установить изображение
-- `set description(value: string | string[])` - установить описание
+- `set description(value: string)` - установить описание
 - `set price(value: string)` - установить цену
 
 #### Класс OrderForm
@@ -245,7 +245,7 @@ type FormErrors = Partial<Record<keyof IOrder, string>>;
 
  ##### Поля класса:
 - `payment(value: TPayment)` - способ оплаты
-- `address(value: string): HTMLInputElement` - адрес доставки
+- `address(value: string)` - адрес доставки
 - `email: HTMLInputElement` - электронная почта
 - `phone: HTMLInputElement` - номер телефона
 - `paymentPrice(value: string)` - итоговая цена для оплаты
@@ -253,15 +253,15 @@ type FormErrors = Partial<Record<keyof IOrder, string>>;
 ##### Методы:
 
 - `set payment(value: TPayment)` - устанавливает способ оплаты.
-- `set adress(value: string)` - устанавливает адрес доставки.
+- `set address(value: string)` - устанавливает адрес доставки.
 - `set email(value: string)` - устанавливает email.
 - `set phone(value: string)` - устанавливает номер телефона.
 - `set paymentPrice(value: string)` - устанавливает итоговую цену для оплаты
 
-- `get payment(value: TPayment)` - возвращает способ оплаты.
-- `get adress(value: string)` - возвращает адрес доставки.
-- `get email(value: string)` - возвращает email
-- `get phone(value: string)` - возвращает телефона.
+- `get payment(): TPayment` - возвращает способ оплаты.
+- `get address(): string` - возвращает адрес доставки.
+- `get email(): string` - возвращает email
+- `get phone(): string` - возвращает номер телефона.
 
 ### Слой презентера
 
@@ -280,7 +280,7 @@ type FormErrors = Partial<Record<keyof IOrder, string>>;
 - `product: select` - выбор товара для просмотра.
 - `product: add` - добавление товара в корзину.
 - `product: remove` -  удаление товара из корзины 
-- `cart: sumbit` - завершение процесса выбора товаров и переход к оформлению заказа
+- `cart: submit` - завершение процесса выбора товаров и переход к оформлению заказа
 - `orderFormData:valid` — валидация формы оформления заказа.
 - `orderFormData:submit` — подтверждение данных покупателя.
 - `order: orderCompleted` - завершение заказа.
