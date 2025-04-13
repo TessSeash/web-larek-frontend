@@ -221,7 +221,7 @@ type FormErrors = Partial<Record<keyof IOrder, string>>;
 #### Класс AppState
 
 Класс для управления состоянием каталога товаров, корзины, заказа и формы оформления заказа. 
-Предоставляет методы для изменения состояния.
+Предоставляет методы для изменения состояния и оповещения подписчиков об изменениях.
 
 ##### Поля класса:
 
@@ -235,7 +235,7 @@ type FormErrors = Partial<Record<keyof IOrder, string>>;
 
 - `setCatalog(items: ICart[])` - список товаров в каталоге(в наличии на главной странцие)
 
-- `addProductToCart(id: string): void` - добавить товар в корзину
+- `addProductToCart(id: string): void` - добавить товар в корзину и оповещает подписчиков об изменении
 - `removeProductFromCart(id: string): void` - убрать товар из корзины
 
 - `getProducts(): IProduct` - вернуть массив товаров в корзине
