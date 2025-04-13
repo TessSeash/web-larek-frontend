@@ -1,10 +1,10 @@
 export interface IProduct {
-    id: string;
-	title: string;
-    category: string;
-    image?: string;
-	description?: string;
-	price: number | null;
+    id: string; // уникальный идентификатор товара
+	title: string; // название 
+    category: string; // категория, тип товара
+    image?: string; // картинка опционально
+	description?: string; // описание товара опционально
+	price: number | null; // цена товара или без неё(бесценно)
 }
 
 export interface IAppState {
@@ -15,25 +15,21 @@ export interface IAppState {
 }
 
 export interface IOrderForm {
-    payment: string;
-    address: string;
-    email: string;
-    phone: string;
+    payment: string; // способ оплаты
+    address: string; // адрес доставки
+    email: string; // элетронная почта
+    phone: string; // номер телефона
 }
 
 export interface IOrder extends IOrderForm {
-    items: string[];
-    total: number;
+    items: string[]; // товары в заказе
+    total: number; // стоимость заказа
+    id: string; // уникальный идентификатор заказа
 }
 
-export interface IOrderResult {
-    id: string;
-    total: number;
-}
+export type FormErrors = Partial<Record<keyof IOrder, string>>; // ошибки валидации формы оформления заказа
 
-export type FormErrors = Partial<Record<keyof IOrder, string>>;
-
-export type TPayment = 'card' | 'cash';
+export type TPayment = 'card' | 'cash'; // способ оплаты
 
 export type AppEvents =
   | 'modal:open'

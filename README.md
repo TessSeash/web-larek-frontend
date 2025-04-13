@@ -202,10 +202,10 @@ type FormErrors = Partial<Record<keyof IOrder, string>>;
 Скрывает элемент, устанавливая display: none.
 
 - `setVisible(element: HTMLElement): void`
-Показывает ранее скрытый элемент, удаляя display.
+Показывает скрытый элемент, удаляя display.
 
--`setImage(element: HTMLImageElement, src: string, alt?: string): void`
-Устанавливает src и (опционально) alt у изображения.
+- `setImage(element: HTMLImageElement, src: string, alt?: string): void`
+Устанавливает изображение и (опционально) alt.
 
 #### Класс Model
 Класс Model - абстрактный.
@@ -250,7 +250,7 @@ type FormErrors = Partial<Record<keyof IOrder, string>>;
 - `showPreview(item: IProduct)` - отображение товара для предосмотра.
 - `productInCart(item: IProduct): boolean` - проверка наличия товара в корзине
 
-- `orderFormValidate(): boolean - проверить формы оформления заказа на валидность
+- `orderFormValidate(): boolean` - проверить формы оформления заказа на валидность
 
 
 ### Слой представления
