@@ -283,4 +283,4 @@ type FormErrors = Partial<Record<keyof IOrder, string>>;
 - `cart: submit` - завершение процесса выбора товаров и переход к оформлению заказа
 - `orderFormData:valid` — валидация формы оформления заказа.
 - `orderFormData:submit` — подтверждение данных покупателя.
-- `order: orderCompleted` - завершение заказа.
+- `orderFormData: orderCompleted` - завершение заказа.
