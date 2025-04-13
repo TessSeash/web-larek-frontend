@@ -1,4 +1,4 @@
-interface IProduct {
+export interface IProduct {
     id: string;
 	title: string;
     category: string;
@@ -7,14 +7,14 @@ interface IProduct {
 	price: number | null;
 }
 
-interface IAppState {
+export interface IAppState {
     catalog:IProduct[];
     cart: string[];
     previw: string | null;
     order: IOrder;
 }
 
-interface IOrderForm {
+export interface IOrderForm {
     payment: string;
     address: string;
     email: string;
@@ -22,13 +22,15 @@ interface IOrderForm {
     total: string | number;
 }
 
-interface IOrder extends IOrderForm {
+export interface IOrder extends IOrderForm {
     items: string[];
 }
 
-interface IOrderResult {
+export interface IOrderResult {
     id: string;
     total: number;
 }
 
-type FormErrors = Partial<Record<keyof IOrder, string>>;
+export type FormErrors = Partial<Record<keyof IOrder, string>>;
+
+export type TPayment = 'card' | 'cash' | undefined;
