@@ -80,7 +80,6 @@ interface IOrderForm {
     	address: string;
     	email: string;
     	phone: string;
-    	paymentPrice: string | number;
 }
 ```
 Интерфейс данных самого заказа (Товары и данные покупателя)
