@@ -87,10 +87,15 @@ interface IOrderForm {
 interface IOrder extends IOrderForm {
     items: string[];
     total: number;
-    id: string;
 }
 ```
-
+Тип для возврата данных с сервера в случае успешно оформленного заказа
+```
+interface IOrderResult {
+	id: string;
+	total: number;
+}
+```
 Типы ошибки валидации данных формы
 ```
 type FormErrors = Partial<Record<keyof IOrder, string>>;
@@ -242,7 +247,7 @@ type FormErrors = Partial<Record<keyof IOrder, string>>;
 - `getOrder(): IOrder` - вернуть объект текущего заказа.
 - `getCartIds(): string[]` - вернуть массив с id товаров.
 
-- `showPreview(item: IProduct)` - отображение товара для предосмотра.
+- `setPreview(item: IProduct)` - отображение товара для предосмотра.
 - `productInCart(item: IProduct): boolean` - проверка наличия товара в корзине
 
 - `orderFormValidate(): boolean` - проверить формы оформления заказа на валидность

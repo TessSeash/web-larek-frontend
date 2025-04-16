@@ -24,7 +24,11 @@ export interface IOrderForm {
 export interface IOrder extends IOrderForm {
     items: string[]; // товары в заказе
     total: number; // стоимость заказа
-    id: string; // уникальный идентификатор заказа
+}
+
+export interface IOrderResult { // тип для возврата данных с сервера в случае успешно оформленного заказа
+    id: string;
+    total: number;
 }
 
 export interface ICart {
