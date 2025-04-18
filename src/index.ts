@@ -13,10 +13,10 @@ import { Product } from './components/Product';
 import { Modal } from './components/common/Modal';
 import { Cart } from './components/common/Cart';
 import { OrderResult } from './components/common/OrderResult';
-import { ContactsForm } from './components/Contacts';
+import { ContactsForm } from './components/ContactsForm';
 
-import { IProduct, TPayment, AppEvents } from './types';
-import { OrderForm } from './components/Order';
+import { IProduct, TPayment, AppEvents, IOrderForm } from './types';
+import { OrderForm } from './components/OrderForm';
 
 const events = new EventEmitter();
 const api = new ApiService(CDN_URL, API_URL);
@@ -40,7 +40,11 @@ const modal = new Modal(ensureElement('#modal-container'), events); // конт�
 const order = new OrderForm(cloneTemplate(orderTemplate), events);
 const contacts = new ContactsForm(cloneTemplate(contactsTemplate), events);
 
-const orderFormValid = appData.formsErrors.address;
+const orderFormValid = appData.formsErrors.address; 
+/* orderFormValid - для первой кнопки в оформлении заказа,
+ если закрывать модальное окно и опять к нему возращаться,
+ то кнопка будет всё ещё активна
+*/
 
 api
 	.getProducts() // Загружаем товары с сервера и добавляем в каталог
@@ -205,14 +209,28 @@ events.on(AppEvents.ContactsPhoneChanged, (data: { value: string }) => {
 	appData.setOrderPhone(data.value);
 });
 
-events.on(AppEvents.FormErrorsChanged, () => {
-	const errors = appData.formsErrors; // контейнер ошибок валидации
-	const form = appData.orderForm; // контейнер значений вводимых в форме оформления
+events.on(AppEvents.FormErrorsChanged, (errors: Partial<IOrderForm>) => {
+	const form = appData.orderForm;
+	// Формируем список ошибок для формы адреса
+	const orderErrors: string[] = [];
+	if (errors.address) orderErrors.push(errors.address);
 
-	// проверка на ошибки валидации и наличие значений в инпутах
-	order.valid = !errors.address && !!form.address; // кнопка "далее"
+	order.valid = !errors.address && !!form.address;
+	order.errors = orderErrors;
+
+	// Формируем список ошибок для формы контактов
+	const contactsErrors: string[] = [];
+	if (errors.email) {
+		contactsErrors.push(errors.email);
+	}
+
+	if (errors.phone) {
+		contactsErrors.push(errors.phone);
+	}
+	// реакция кнопки на наличие ошибок валидации
 	contacts.valid =
-		!errors.email && !!form.email && !errors.phone && !!form.phone; // кнопка "оплатить"
+		!errors.email && !!form.email && !errors.phone && !!form.phone;
+	contacts.errors = contactsErrors;
 });
 
 events.on(AppEvents.OrderSubmit, () => {

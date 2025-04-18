@@ -48,41 +48,38 @@ yarn build
 Интерфейс товара
 ```
 interface IProduct {
-	id: string;
-	title: string;
-	category: string;
-	image?: string;
-	description?: string;
-	price: number | null;
+	id: string; 
+	title: string; 
+	category: string; 
+	image?: string; 
+	description?: string; 
+	price: number | null; 
+	button?: HTMLElement;
 }
 ```
 
 Интерфейс для частей приложения: каталог, корзина, превью, форма заказа
 ```
 interface IAppState {
-	catalog:IProduct[];
-	cart: string[];
+	catalog: IProduct[];
+	cart: string[]; 
 	preview: string | null;
-	order: IOrder;
+	order: IOrder; 
 }
 ```
-Интерфейс корзины товаров
-```
- interface ICart {
-	products: IProduct[];
-	totalPrice: number;
- }
-```
+
 Интерфейс данных покупателя для оформления заказа
 ```
 interface IOrderForm {
-    	payment: TPayment;
-    	address: string;
-    	email: string;
-    	phone: string;
+    payment: 'cash' | 'card';
+	address: string; 
+	email: string; 
+	phone: string;
+	valid: boolean;
+	errors: string[];
 }
 ```
-Интерфейс данных самого заказа (Товары и данные покупателя)
+Интерфейс данных заказа (Товары и стомость заказа)
 ```
 interface IOrder extends IOrderForm {
     items: string[];
@@ -95,6 +92,14 @@ interface IOrderResult {
 	id: string;
 	total: number;
 }
+```
+Интерфейс корзины товаров
+```
+ interface ICart {
+	products: HTMLElement[];
+	totalPrice: number; 
+	selected: string[];
+ }
 ```
 Типы ошибки валидации данных формы
 ```
@@ -109,16 +114,44 @@ type FormErrors = Partial<Record<keyof IOrder, string>>;
 
  Типы взаимодействий компонентов (события)
  ```
- export type AppEvents =
-  | 'modal:open'
-  | 'modal:close'
-  | 'product:select'
-  | 'product:add'
-  | 'product:remove'
-  | 'cart:submit'
-  | 'orderFormData:valid'
-  | 'orderFormData:submit'
-  | 'orderFormData:orderCompleted';
+enum AppEvents { //все события
+    CatalogChanged = 'catalog:changed',
+    ProductSelect = 'product:select',
+    ProductAdd = 'product:add',
+    ProductRemove = 'product:remove',
+    ModalOpen = 'modal:open',
+    ModalClose = 'modal:close',
+    PreviewChanged = 'preview:changed',
+    CartOpen = 'cart:open',
+    CartChanged = 'cart:changed',
+    CounterChanged = 'counter:changed',
+    OrderOpen = 'order:open',
+    PaymentChanged = 'payment:changed',
+    OrderAddressChanged = 'order.address:changed',
+    ContactsEmailChanged = 'contacts.email:changed',
+    ContactsPhoneChanged = 'contacts.phone:changed',
+    FormErrorsChanged = 'formErrors:changed',
+    OrderSubmit = 'order:submit',
+    ContactsSubmit = 'contacts:submit',
+  }
+ ```
+ Типы категорий заказа
+ ```
+ enum Category { // категория товаров
+	SoftSkill = 'софт-скил',
+	HardSkill = 'хард-скил',
+	Additional = 'дополнительное',
+	Other = 'другое',
+	Button = 'кнопка',
+}
+
+const categoryClasses: Record<Category, string> = {
+	[Category.SoftSkill]: 'soft',
+	[Category.HardSkill]: 'hard',
+	[Category.Additional]: 'additional',
+	[Category.Other]: 'other',
+	[Category.Button]: 'button',
+}
  ```
 
 ## Архитектура приложения
@@ -234,24 +267,25 @@ type FormErrors = Partial<Record<keyof IOrder, string>>;
 - `cart: IProduct[]` - хранение id товаров, добавленных в корзину
 - `preview: string | null` - id товара который, просматривают
 - `order: IOrder` - текущий заказ
+- `orderForm: IOrderForm` - данные формы
 - `formErrors` - ошибки валидации в форме оформления заказа
 
 ##### Методы:
 
-- `setCatalog(items: IProduct[])` - список товаров в каталоге(в наличии на главной странцие)
+- `setCatalog(items: IProduct[])` - установить список товаров в каталоге(в наличии на главной странцие)
+- `setPreview(item: IProduct)` - установить товар для предосмотра.
 
 - `addProductToCart(id: string): void` - добавить товар в корзину и оповещает подписчиков об изменении
-- `removeProductFromCart(id: string): void` - убрать товар из корзины
-
-- `getProducts(): IProduct` - вернуть массив с ID товаров в корзине
-- `getOrder(): IOrder` - вернуть объект текущего заказа.
-- `getTotal(): number` - вернуть сумму всех товаров в корзине.
-
-- `setPreview(item: IProduct)` - отображение товара для предосмотра.
+- `removeProductFromCart(id: string): void` - убрать товар из корзины и оповещение подписчиков
 - `productInCart(item: IProduct): boolean` - проверка наличия товара в корзине
-
-- `orderFormValidate(): boolean` - проверить формы оформления заказа на валидность
-- `clearFormInputs()` - очистить все поля оформления заказа
+- `getOrder(): IOrder` - вернуть объект текущего заказа.
+- `getProducts(): IProduct` - вернуть массив с ID товаров в корзине
+- `getTotal(): number` - вернуть сумму всех товаров в корзине.
+- `setOrderAddress(value: string)` - назначить адрес доставки и включить проверку валидности
+- `setOrderEmail(value: string)` - назначить электронную почту и включить проверку валидности
+- `setOrderPhone(value: string)` - назначить номер телефона и включить проверку валидности
+- `checkValidity(form: string)` - проверить валидность получаемого инпута и уведомить подписчиков о событии
+- `clearAppData()` - очистить данные о пользователе и о заказе, испольуется после успешной отправки заказа на сервер
 
 
 ### Слой представления
@@ -265,39 +299,40 @@ type FormErrors = Partial<Record<keyof IOrder, string>>;
 
 ##### Поля класса:
 
-- `modal: HTMLElement` - элемент для отображения модального окна.
-- `events: IEvents` - брокер событий
+- `_content` - элемент для отображения модального окна.
+- `_closeButton` - элемент закрытия модального окна
 
 ##### Методы:
 
 - `open` - открыть модальное окно
 - `close` - закрыть модальное окно
+- `render` - обновляет данные компонента и возвращает его контейнер.
 
 #### Класс Cart
 Класс для отображения корзины. Имеет список выбранных товаров и итоговую цену.
 
 ##### Поля класса:
-- `cartContainer: HTMLElement` - контейнер для выбранных товаров
-- `total: HTMLElement` - элемент итоговой цены к оплате
-- `StartOrderButton: HTMLElement` - кнопка для перехода к оформлению заказа
+- `_products: HTMLElement;` - контейнер для выбранных товаров
+- `_total: HTMLElement` - элемент итоговой цены к оплате
+- `_button` - кнопка для перехода к оформлению заказа(чтобы начать оформление)
 
 ##### Методы:
 
 - `set items(items: HTMLElement[])` - обновление списка товаров
-- `set orderProccess(items: string[])` - отвечает за возможность начать оформление заказа при наличии выбранных товаров.
-- `set total(total: number)` - обновление итоговой цены к оплате
-
+- `set selected(items: string[])` - активирует или деактивирует кнопку оформления в зависимости от наличия выбранных товаров.
+- `set total(total: number)` - обновление итоговой цены к оплате. Если в корзине бесценный товар то нельзя оплачивать
+= `set totalInfinite(state: boolean)` - выключает кнопку если есть бесценный товар в корзине
 
 #### Класс OrderResult
 Класс для отображения успешно сделанного заказа
 
 ##### Поля класса:
-
-- `successMessage: HTMLElement` - элемент с сообщением об успешно завершенной покупке
+- `_close: HTMLElement` - кнопка закрытия окна успешно завершенного заказа
+- `_description: HTMLElement` - элемент с сообщением об успешно завершенной покупке
 
 ##### Методы:
 
-- `set total(total: number)` - установка оплаченной суммы за итоговый заказ
+- `set total(total: number)` - установка суммы за итоговый заказ
 
 #### Класс Page
 
@@ -306,14 +341,15 @@ type FormErrors = Partial<Record<keyof IOrder, string>>;
 
 ##### Поля класса:
 
-- `wrapper: HTMLElement` - состояние обертки страницы.
-- `button: HTMLButtonElement` - кнопка для открытия корзины.
-- `counter: HTMLSpanElement` - счётчик количества товаров в корзине.
+- `_wrapper: HTMLElement` - состояние обертки страницы.
+- `_buttonCart: HTMLButtonElement` - кнопка для открытия корзины.
+- `_counter: HTMLSpanElement` - счётчик количества товаров в корзине.
+- `protected _catalog: HTMLElement` - контейнер каталога товаров на главной странице
 
 ##### Методы:
-- `set isLocked(value:boolean)` - блокировать или разблокировать страницу.
-- `set counter(value:number)` - изменить счётчик количества товаров в корзине.
-
+- `set catalog(items: HTMLElement[])` - установить товары в каталоге
+- `set counter(value: number)` - установить счётсчик товаров в корзине
+- `set locked(value: boolean)` - закрепить или открепить страницу от прокрутки
 
 #### Класс Product
 
@@ -327,18 +363,22 @@ type FormErrors = Partial<Record<keyof IOrder, string>>;
 - `image` - изображение
 - `description` - описание
 - `price` - цена
+- `button` -  кнопка для добавления карточки в превью
 
 ##### Методы:
 
 - `set id(value: string)` - установить идентификатор товара
-- `get id():string` - удалить идентификатор товара
 - `set title(value: string)` - установить название
-- `get title(): string` - возращает название
 - `set category(value: string)` - установить категорию(тип)
 - `set image(value: string)` -  установить изображение
 - `set description(value: string)` - установить описание
 - `set price(value: string)` - установить цену
+- `set button(value:string)` - установить текст в кнопке
+
+- `get id():string` - возвращает идентификатор товара
+- `get title(): string` - возращает название
 - `get price(): string` - возвращает цену
+
 
 
 #### Класс OrderForm
@@ -346,24 +386,43 @@ type FormErrors = Partial<Record<keyof IOrder, string>>;
 Класс для процесса оформления покупки. Покупатель указывает свои данные и способ оплаты
 
  ##### Поля класса:
-- `payment(value: TPayment)` - способ оплаты
-- `address(value: string)` - адрес доставки
-- `email: HTMLInputElement` - электронная почта
-- `phone: HTMLInputElement` - номер телефона
-- `paymentPrice(value: string)` - итоговая цена для оплаты
+- `_paymentButtons: HTMLButtonElement[]` - кнопки способа оплаты
+- `_paymentCard: HTMLButtonElement` - кнопка оплаты картой
+- `_paymentCash: HTMLButtonElement` - кнопка оплаты наличными при получении
+- `_addressInput: HTMLInputElement` - поле ввода для адреса
 
 ##### Методы:
 
-- `set payment(value: TPayment)` - устанавливает способ оплаты.
-- `set address(value: string)` - устанавливает адрес доставки.
-- `set email(value: string)` - устанавливает email.
-- `set phone(value: string)` - устанавливает номер телефона.
-- `set paymentPrice(value: string)` - устанавливает итоговую цену для оплаты
+- `set payment` - устанавливает способ оплаты.
+- `set valid` - активировать деактивировать кнопку продолжения оформления формы
+- `clearAddress` - очистить поле ввода адреса
 
-- `get payment(): TPayment` - возвращает способ оплаты.
-- `get address(): string` - возвращает адрес доставки.
-- `get email(): string` - возвращает email
-- `get phone(): string` - возвращает номер телефона.
+
+#### Класс ContactsForm
+Класс предназначен для работы с контактной формой(email и телефона) оформления заказа.
+##### Поля класса:
+
+- `emailInput` - поле ввода email.
+- `phoneInput:` - поле ввода номера телефона.
+
+##### Методы:
+
+- `clearContacts` - очистить поля ввода электронной почты и номера телефона
+
+
+#### Класс BaseForm
+Класс представляет собой базовый абстрактный компонент формы.
+Он нужен для управления поведением валидации, отображением ошибок и обработкой ввода данных.
+
+##### Поля класса:
+- `_submitButton: HTMLButtonElement` - кнопка в оформлении заказа
+- `_errors: HTMLElement` - контейнер для отображения ошибок
+
+##### Методы:
+- `onInputChange` - метод, вызываемый при изменении любого поля формы. Генерирует событие кастомные события.
+- `set valid` - устанавливает валидность формы
+- `set errors` - устанавливает список ошибок
+- `render` - метод для обновления состояния формы
 
 ### Слой презентера
 Слой презентера отвечает за связь между данными и пользовательским интерфейсом. 
@@ -376,16 +435,25 @@ type FormErrors = Partial<Record<keyof IOrder, string>>;
 ##### Методы:
 
 - `getProducts` - Получить данные о товарах с сервера.
-- `sendOrder` - Отправить заказ.
+- `sendProducts` - Отправить заказ на сервер.
 
 
-#### Взаимодействия компонентов
-- `modal: open` - открытие модального окна.
-- `modal: close` - закрытие модального окна.
-- `product: select` - выбор товара для просмотра.
-- `product: add` - добавление товара в корзину.
-- `product: remove` -  удаление товара из корзины 
-- `cart: submit` - завершение процесса выбора товаров и переход к оформлению заказа
-- `orderFormData:valid` — валидация формы оформления заказа.
-- `orderFormData:submit` — подтверждение данных покупателя.
-- `orderFormData: orderCompleted` - завершение заказа.
+#### Взаимодействия компонентов(события)
+- `catalog: changed` — изменение каталога товаров.
+- `product: select` — выбор товара для просмотра.
+- `product: add` — добавление товара в корзину.
+- `product: remove` — удаление товара из корзины.
+- `modal: open` — открытие модального окна.
+- `modal: close` — закрытие модального окна.
+- `preview: changed` — обновление предпросмотра товара.
+- `cart: open` — открытие корзины.
+- `cart: changed` — изменение содержимого корзины.
+- `counter: changed` — изменение счётчика товаров.
+- `order: open` — открытие формы оформления заказа.
+- `payment: changed` — изменение способа оплаты.
+- `order.address: changed` — изменение адреса доставки.
+- `contacts.email: changed` — изменение почты в контактной форме.
+- `contacts.phone: changed` — изменение телефона в контактной форме.
+- `formErrors: changed` — изменение состояния ошибок в форме.
+- `order: submit` — завершение заполнения формы с адрессом и оплатой.
+- `contacts: submit` — завершение заполнения формы с почтой и номером телефона.

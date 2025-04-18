@@ -13,7 +13,7 @@ export class Product extends Component<IProduct> {
 	_image?: HTMLImageElement; // картинка опционально
 	_description?: HTMLElement; // описание товара опционально
 	_price: HTMLElement; // цена товара
-	_button: HTMLButtonElement; // кнопка добавления или удаления в превью
+	_button: HTMLButtonElement; // кнопка для добавления карточки в превью
 
 	constructor(container: HTMLElement, actions?: IProductClickEvent) {
 		super(container);

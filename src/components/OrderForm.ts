@@ -1,8 +1,9 @@
 import { IEvents } from './base/events';
 import { ensureElement, ensureAllElements } from '../utils/utils';
 import { BaseForm } from './common/BaseForm';
+import { IOrderForm } from '../types';
 
-export class OrderForm<T> extends BaseForm<T> {
+export class OrderForm extends BaseForm<IOrderForm> {
 	protected _paymentButtons: HTMLButtonElement[];
 	protected _paymentCard: HTMLButtonElement;
 	protected _paymentCash: HTMLButtonElement;
@@ -60,10 +61,6 @@ export class OrderForm<T> extends BaseForm<T> {
 	}
 
 	set valid(value: boolean) {
-		this._submitButton.disabled = !value;
-	}
-
-	set cartEmpty(value: boolean) {
 		this._submitButton.disabled = !value;
 	}
 

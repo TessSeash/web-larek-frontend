@@ -85,31 +85,34 @@ export class AppState extends Model<IAppState> {
 	}
 
 	checkValidity(form: string): void {
+		const errors: FormErrors = {};
 		if (!this.orderForm.address && form === 'address') {
 			this.formsErrors.address = 'Укажите адрес доставки';
+			errors.address = 'Укажите адрес доставки';
 		} else {
 			this.formsErrors.address = '';
+			errors.address = '';
 		}
 
 		if (!this.orderForm.email && form === 'email') {
 			this.formsErrors.email = 'Необходимо указать электронную почту';
+			errors.email = 'Необходимо указать электронную почту';
 		} else {
 			this.formsErrors.email = '';
+			errors.email = '';
 		}
 
 		if (!this.orderForm.phone && form === 'phone') {
-			this.formsErrors.phone = 'Необходимо указать телефон';
+			this.formsErrors.phone = 'Необходимо указать номер телефона';
+			errors.phone = 'Необходимо указать номер телефона';
 		} else {
 			this.formsErrors.phone = '';
+			errors.phone = '';
 		}
 		this.emitChanges('formErrors:changed', this.formsErrors);
 	}
 
-	getPreviewButton(product: HTMLButtonElement) {
-		return product.onclick;
-	}
-
-	clearAppData() {
+	clearAppData() : void {
 		this.preview = null;
 		this.orderForm = {
 			payment: 'cash',

@@ -16,7 +16,7 @@ export interface IAppState {
 }
 
 export interface IOrderForm {
-	payment: 'cash' | 'card'; // способ оплаты
+	payment: 'cash' | 'card'; // способ оплаты, по умолчанию оплата будет cash
 	address: string; // адрес доставки
 	email: string; // элетронная почта
 	phone: string; // номер телефона
@@ -80,4 +80,4 @@ export const categoryClasses: Record<Category, string> = {
 	[Category.Additional]: 'additional',
 	[Category.Other]: 'other',
 	[Category.Button]: 'button',
-};
+}
