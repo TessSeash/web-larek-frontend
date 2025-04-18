@@ -231,26 +231,27 @@ type FormErrors = Partial<Record<keyof IOrder, string>>;
 ##### Поля класса:
 
 - `catalog:IProduct[]` - хранение товаров в ассортименте на странице
-- `cart: string[]` - хранение id товаров, добавленных в корзину
+- `cart: IProduct[]` - хранение id товаров, добавленных в корзину
 - `preview: string | null` - id товара который, просматривают
 - `order: IOrder` - текущий заказ
 - `formErrors` - ошибки валидации в форме оформления заказа
 
 ##### Методы:
 
-- `setCatalog(items: ICart[])` - список товаров в каталоге(в наличии на главной странцие)
+- `setCatalog(items: IProduct[])` - список товаров в каталоге(в наличии на главной странцие)
 
 - `addProductToCart(id: string): void` - добавить товар в корзину и оповещает подписчиков об изменении
 - `removeProductFromCart(id: string): void` - убрать товар из корзины
 
-- `getProducts(): IProduct` - вернуть массив товаров в корзине
+- `getProducts(): IProduct` - вернуть массив с ID товаров в корзине
 - `getOrder(): IOrder` - вернуть объект текущего заказа.
-- `getCartIds(): string[]` - вернуть массив с id товаров.
+- `getTotal(): number` - вернуть сумму всех товаров в корзине.
 
 - `setPreview(item: IProduct)` - отображение товара для предосмотра.
 - `productInCart(item: IProduct): boolean` - проверка наличия товара в корзине
 
 - `orderFormValidate(): boolean` - проверить формы оформления заказа на валидность
+- `clearFormInputs()` - очистить все поля оформления заказа
 
 
 ### Слой представления
@@ -287,7 +288,7 @@ type FormErrors = Partial<Record<keyof IOrder, string>>;
 - `set total(total: number)` - обновление итоговой цены к оплате
 
 
-#### Класс CompletedOrder
+#### Класс OrderResult
 Класс для отображения успешно сделанного заказа
 
 ##### Поля класса:
