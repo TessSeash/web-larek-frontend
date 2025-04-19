@@ -1,4 +1,3 @@
-// import { Api, ApiListResponse } from './base/api';
 
 import { IProduct, IOrderForm, IOrderResult } from '../types';
 import { Api, ApiListResponse } from './base/api';

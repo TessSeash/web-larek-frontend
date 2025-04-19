@@ -14,6 +14,7 @@ export class Product extends Component<IProduct> {
 	_description?: HTMLElement; // описание товара опционально
 	_price: HTMLElement; // цена товара
 	_button: HTMLButtonElement; // кнопка для добавления карточки в превью
+	_index: HTMLElement; //номер товара в корзине
 
 	constructor(container: HTMLElement, actions?: IProductClickEvent) {
 		super(container);
@@ -25,6 +26,7 @@ export class Product extends Component<IProduct> {
 		this._description = container.querySelector('.card__text');
 		this._price = container.querySelector('.card__price');
 		this._button = container.querySelector('.card__button');
+		this._index = container.querySelector('.basket__item-index');
 
 		if (actions?.onClick) {
 			if (this._button) {
@@ -60,6 +62,11 @@ export class Product extends Component<IProduct> {
 		if (categoryEnum) {
 			const categoryClass = categoryClasses[categoryEnum];
 			this._category.classList.add(`card__category_${categoryClass}`);
+		} 
+		// Если нет нужного варианта то будем передавать значение и свойства категории other, она будет по-умолчанию
+		else {
+			const categoryClass = 'other';
+			this._category.classList.add(`card__category_${categoryClass}`);
 		}
 	}
 
@@ -87,19 +94,12 @@ export class Product extends Component<IProduct> {
 		this.setText(this._price, value ? `${value} синапсов` : `Бесценно`);
 	}
 
-	get id(): string {
-		return this.container.dataset.id || '';
-	}
-
-	get title(): string {
-		return this._title.textContent || '';
-	}
-
-	get price(): string {
-		return this._price.textContent || '';
-	}
-
+	// использую метод setText вместо прямой установки textContent
 	set button(value: string) {
-		this._button.textContent = value;
+		this.setText(this._button, value);
+	}
+
+	set index(value: number) {
+		this.setText(this._index, value)
 	}
 }

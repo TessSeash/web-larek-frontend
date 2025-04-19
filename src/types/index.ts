@@ -1,5 +1,6 @@
 export interface IProduct {
 	id: string; // уникальный идентификатор товара
+	index: number; // номер товара при добавлении в корзину
 	title: string; // название
 	category: string; // категория, тип товара
 	image?: string; // картинка опционально
@@ -20,8 +21,6 @@ export interface IOrderForm {
 	address: string; // адрес доставки
 	email: string; // элетронная почта
 	phone: string; // номер телефона
-	valid: boolean;
-	errors: string[];
 }
 
 export interface IOrder extends IOrderForm {
@@ -79,5 +78,12 @@ export const categoryClasses: Record<Category, string> = {
 	[Category.HardSkill]: 'hard',
 	[Category.Additional]: 'additional',
 	[Category.Other]: 'other',
-	[Category.Button]: 'button',
+	[Category.Button]: 'button'
 }
+
+// ошибки для валидации
+export const errText = {
+    address: 'Укажите адрес доставки',
+    email: 'Необходимо указать электронную почту',
+    phone: 'Необходимо указать номер телефона',
+};

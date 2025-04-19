@@ -49,6 +49,7 @@ yarn build
 ```
 interface IProduct {
 	id: string; 
+	index: number;
 	title: string; 
 	category: string; 
 	image?: string; 
@@ -75,8 +76,6 @@ interface IOrderForm {
 	address: string; 
 	email: string; 
 	phone: string;
-	valid: boolean;
-	errors: string[];
 }
 ```
 Интерфейс данных заказа (Товары и стомость заказа)
@@ -151,6 +150,14 @@ const categoryClasses: Record<Category, string> = {
 	[Category.Additional]: 'additional',
 	[Category.Other]: 'other',
 	[Category.Button]: 'button',
+}
+ ```
+Значения для валидации, чтобы подставлять в контейнер с ошибками
+ ```
+ const errText = {
+    address: 'Укажите адрес доставки',
+    email: 'Необходимо указать электронную почту',
+    phone: 'Необходимо указать номер телефона',
 }
  ```
 
@@ -267,11 +274,11 @@ const categoryClasses: Record<Category, string> = {
 - `cart: IProduct[]` - хранение id товаров, добавленных в корзину
 - `preview: string | null` - id товара который, просматривают
 - `order: IOrder` - текущий заказ
-- `orderForm: IOrderForm` - данные формы
 - `formErrors` - ошибки валидации в форме оформления заказа
-
+- `orderForm(): IOrderForm` - данные формы оформления заказа, формируются на основе текущего заказа order при помощи сеттера.
 ##### Методы:
 
+- `set orderForm(value: IOrderForm)` - сформировать данные формы оформления заказа
 - `setCatalog(items: IProduct[])` - установить список товаров в каталоге(в наличии на главной странцие)
 - `setPreview(item: IProduct)` - установить товар для предосмотра.
 
@@ -321,7 +328,6 @@ const categoryClasses: Record<Category, string> = {
 - `set items(items: HTMLElement[])` - обновление списка товаров
 - `set selected(items: string[])` - активирует или деактивирует кнопку оформления в зависимости от наличия выбранных товаров.
 - `set total(total: number)` - обновление итоговой цены к оплате. Если в корзине бесценный товар то нельзя оплачивать
-= `set totalInfinite(state: boolean)` - выключает кнопку если есть бесценный товар в корзине
 
 #### Класс OrderResult
 Класс для отображения успешно сделанного заказа
@@ -344,7 +350,7 @@ const categoryClasses: Record<Category, string> = {
 - `_wrapper: HTMLElement` - состояние обертки страницы.
 - `_buttonCart: HTMLButtonElement` - кнопка для открытия корзины.
 - `_counter: HTMLSpanElement` - счётчик количества товаров в корзине.
-- `protected _catalog: HTMLElement` - контейнер каталога товаров на главной странице
+- `_catalog: HTMLElement` - контейнер каталога товаров на главной странице
 
 ##### Методы:
 - `set catalog(items: HTMLElement[])` - установить товары в каталоге
@@ -364,6 +370,7 @@ const categoryClasses: Record<Category, string> = {
 - `description` - описание
 - `price` - цена
 - `button` -  кнопка для добавления карточки в превью
+- `index` - номер товара в корзине покупок
 
 ##### Методы:
 
@@ -374,11 +381,6 @@ const categoryClasses: Record<Category, string> = {
 - `set description(value: string)` - установить описание
 - `set price(value: string)` - установить цену
 - `set button(value:string)` - установить текст в кнопке
-
-- `get id():string` - возвращает идентификатор товара
-- `get title(): string` - возращает название
-- `get price(): string` - возвращает цену
-
 
 
 #### Класс OrderForm

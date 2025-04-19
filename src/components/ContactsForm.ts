@@ -6,7 +6,6 @@ import { ensureElement } from "../utils/utils";
 export class ContactsForm extends BaseForm<IOrderForm> {
     emailInput: HTMLInputElement;
     phoneInput: HTMLInputElement;
-    payOrderButton: HTMLButtonElement;
   
     constructor(container: HTMLFormElement, events: IEvents) {
       super(container, events);

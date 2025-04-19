@@ -45,14 +45,14 @@ export class BaseForm<T> extends Component<IBaseForm> {
 	}
 	// поведение кнопки в зависимости от валидности форм
 	set valid(value: boolean) {
-		this._submitButton.disabled = !value;
+		this.setDisabled(this._submitButton, !value);
 	}
 	// отображение ошибок в формах
 	set errors(value: string[]) {
 		this.setText(this._errors, value.join('; '));
 	}
 
-	render(state: Partial<T> & IOrderForm) {
+	render(state: Partial<T> & IBaseForm) {
 		const { valid, errors, ...inputs } = state;
 		super.render({ valid, errors });
 		Object.assign(this, inputs);

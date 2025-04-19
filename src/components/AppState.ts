@@ -1,4 +1,4 @@
-import { FormErrors, IAppState, IProduct, IOrderForm, IOrder } from '../types';
+import { FormErrors, IAppState, IProduct, IOrderForm, IOrder, errText } from '../types';
 import { Model } from './base/Model';
 
 export type CatalogChanged = {
@@ -16,18 +16,24 @@ export class AppState extends Model<IAppState> {
 		address: '',
 		email: '',
 		phone: '',
-		valid: false,
-		errors: [],
-	};
-	orderForm: IOrderForm = {
-		payment: 'cash', // способ оплаты
-		address: '', // адрес доставки
-		email: '', // элетронная почта
-		phone: '', // номер телефона
-		valid: false,
-		errors: [],
 	};
 	formsErrors: FormErrors = {};
+
+	get orderForm(): IOrderForm {
+		return {
+			payment: this.order.payment,
+			address: this.order.address,
+			email: this.order.email,
+			phone: this.order.phone,
+		};
+	}
+
+	set orderForm(value: IOrderForm) {
+		this.order.payment = value.payment;
+		this.order.address = value.address;
+		this.order.email = value.email;
+		this.order.phone = value.phone;
+	}
 
 	setCatalog(products: IProduct[]) {
 		this.catalog = products;
@@ -62,9 +68,9 @@ export class AppState extends Model<IAppState> {
 	}
 
 	getTotal(): number {
-		let allPricesArr = this.cart.map((product) => product.price); // Берем все цены в корзине
-		return allPricesArr.reduce((sum, nextPrice) => sum + nextPrice, 0); // складываем все цены
+		return this.cart.reduce((total, product) => total + (product.price || 0), 0); 
 	}
+	
 
 	setOrderAddress(value: string) {
 		this.orderForm.address = value;
@@ -86,41 +92,41 @@ export class AppState extends Model<IAppState> {
 
 	checkValidity(form: string): void {
 		const errors: FormErrors = {};
-		if (!this.orderForm.address && form === 'address') {
-			this.formsErrors.address = 'Укажите адрес доставки';
-			errors.address = 'Укажите адрес доставки';
+		// Используем константы из errText для ошибок валидации
+		if (!this.orderForm.address && form === 'address') { //валидация адресса доставки
+			this.formsErrors.address = errText.address;  
+			errors.address = errText.address;
 		} else {
 			this.formsErrors.address = '';
 			errors.address = '';
 		}
-
-		if (!this.orderForm.email && form === 'email') {
-			this.formsErrors.email = 'Необходимо указать электронную почту';
-			errors.email = 'Необходимо указать электронную почту';
+	
+		if (!this.orderForm.email && form === 'email') { //валидация почты
+			this.formsErrors.email = errText.email;  
+			errors.email = errText.email;
 		} else {
 			this.formsErrors.email = '';
 			errors.email = '';
 		}
-
-		if (!this.orderForm.phone && form === 'phone') {
-			this.formsErrors.phone = 'Необходимо указать номер телефона';
-			errors.phone = 'Необходимо указать номер телефона';
+		
+		if (!this.orderForm.phone && form === 'phone') { //валидация номера телефона
+			this.formsErrors.phone = errText.phone;  
+			errors.phone = errText.phone;
 		} else {
 			this.formsErrors.phone = '';
 			errors.phone = '';
 		}
+	
 		this.emitChanges('formErrors:changed', this.formsErrors);
 	}
 
-	clearAppData() : void {
+	clearAppData(): void {
 		this.preview = null;
 		this.orderForm = {
 			payment: 'cash',
 			address: '',
 			email: '',
 			phone: '',
-			valid: false,
-			errors: [],
 		};
 		this.order = {
 			payment: 'cash',
@@ -129,8 +135,6 @@ export class AppState extends Model<IAppState> {
 			address: '',
 			email: '',
 			phone: '',
-			valid: false,
-			errors: [],
 		};
 
 		this.cart = [];

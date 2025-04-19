@@ -11,8 +11,8 @@ import { Page } from './components/Page';
 import { Product } from './components/Product';
 
 import { Modal } from './components/common/Modal';
-import { Cart } from './components/common/Cart';
-import { OrderResult } from './components/common/OrderResult';
+import { Cart } from './components/Cart';
+import { OrderResult } from './components/OrderResult';
 import { ContactsForm } from './components/ContactsForm';
 
 import { IProduct, TPayment, AppEvents, IOrderForm } from './types';
@@ -40,7 +40,7 @@ const modal = new Modal(ensureElement('#modal-container'), events); // конт�
 const order = new OrderForm(cloneTemplate(orderTemplate), events);
 const contacts = new ContactsForm(cloneTemplate(contactsTemplate), events);
 
-const orderFormValid = appData.formsErrors.address; 
+const orderFormValid = appData.formsErrors.address;
 /* orderFormValid - для первой кнопки в оформлении заказа,
  если закрывать модальное окно и опять к нему возращаться,
  то кнопка будет всё ещё активна
@@ -82,6 +82,7 @@ events.on(AppEvents.ProductSelect, (product: IProduct) => {
 
 events.on(AppEvents.ProductAdd, (product: IProduct) => {
 	appData.addProductToCart(product);
+	product.index = appData.cart.length //установка номера товара при добавлении в корзину
 	appData.order.items.push(product.id);
 	events.emit(AppEvents.CartChanged);
 });
@@ -125,6 +126,10 @@ events.on(AppEvents.PreviewChanged, (product: IProduct) => {
 		previewProduct.button = 'В корзину';
 	}
 
+	if (product.price === null) { // Если товар бесценный, то его нельзя купить
+		previewProduct.setDisabled(previewProduct._button, true);
+	}
+
 	modal.render({
 		// подставляем информацию о товаре в превью
 		content: previewProduct.render({
@@ -145,16 +150,20 @@ events.on(AppEvents.CartOpen, () => {
 
 events.on(AppEvents.CartChanged, () => {
 	events.emit(AppEvents.CounterChanged);
-
 	cart.items = appData.cart.map((product) => {
 		const cartProduct = new Product(cloneTemplate(cartProductsTemplate), {
 			onClick: () => {
 				events.emit(AppEvents.ProductRemove, product);
 			},
 		});
+		// номер index каждого товара будет реагировать в зависимости от кол-ва товаров в корзине 
+		appData.cart.forEach((product, index) => {
+			product.index = index + 1;
+		});
 		return cartProduct.render({
 			title: product.title,
 			price: product.price,
+			index : product.index
 		});
 	});
 
@@ -163,12 +172,6 @@ events.on(AppEvents.CartChanged, () => {
 
 	// Обновляем состояние активности кнопки
 	cart.selected = appData.cart.map((p) => p.id);
-	const hasNullPrice = appData.cart.some((product) => product.price === null); // если товар бесценный
-
-	if (hasNullPrice) {
-		cart.totalInfinite = true;
-		cart.total = 'infinite';
-	}
 });
 
 events.on(AppEvents.CounterChanged, () => {

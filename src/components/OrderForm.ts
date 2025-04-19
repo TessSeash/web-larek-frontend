@@ -61,7 +61,7 @@ export class OrderForm extends BaseForm<IOrderForm> {
 	}
 
 	set valid(value: boolean) {
-		this._submitButton.disabled = !value;
+		this.setDisabled(this._submitButton, !value);
 	}
 
 	clearAddress() {

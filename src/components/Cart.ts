@@ -1,7 +1,7 @@
-import { Component } from '../base/Components';
-import { createElement, ensureElement } from '../../utils/utils';
-import { EventEmitter } from '../base/events';
-import { ICart } from '../../types/index';
+import { Component } from './base/Components';
+import { createElement, ensureElement } from '../utils/utils';
+import { EventEmitter } from './base/events';
+import { ICart } from '../types/index';
 
 export class Cart extends Component<ICart> {
 	protected _products: HTMLElement;
@@ -50,19 +50,7 @@ export class Cart extends Component<ICart> {
 		}
 	}
 
-	set totalInfinite(state: boolean) {
-		if (state) {
-			this.setDisabled(this._button, true);
-		} else {
-			this.setDisabled(this._button, false);
-		}
-	}
-
-	set total(total: number | 'infinite') {
+	set total(total: number ) {
 		this.setText(this._total, `${total} синапсов`);
-		if (total === 'infinite') {
-			// если в корзине бесценный товар, итоговая сумма бесценна
-			this.setText(this._total, `Бесценно`);
-		}
 	}
 }
