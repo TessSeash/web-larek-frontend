@@ -1,7 +1,6 @@
 import { IEvents } from '../base/events';
 import { Component } from '../base/Components';
 import { ensureElement } from '../../utils/utils';
-import { IOrderForm } from '../../types';
 
 interface IBaseForm {
 	valid: boolean;

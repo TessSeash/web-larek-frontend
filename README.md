@@ -381,7 +381,7 @@ const categoryClasses: Record<Category, string> = {
 - `set description(value: string)` - установить описание
 - `set price(value: string)` - установить цену
 - `set button(value:string)` - установить текст в кнопке
-
+- `set index(value: number)` - установить индекс номер товара в корзине
 
 #### Класс OrderForm
 
