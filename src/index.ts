@@ -82,7 +82,6 @@ events.on(AppEvents.ProductSelect, (product: IProduct) => {
 
 events.on(AppEvents.ProductAdd, (product: IProduct) => {
 	appData.addProductToCart(product);
-	product.index = appData.cart.length //установка номера товара при добавлении в корзину
 	appData.order.items.push(product.id);
 	events.emit(AppEvents.CartChanged);
 });
